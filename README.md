@@ -3,5 +3,7 @@ This project analyzes professional League of Legends match data to understand ho
 
 by: Qicheng Zou
 
-# Introduction
+---
+
+## Introduction
 introduction of the dataset
