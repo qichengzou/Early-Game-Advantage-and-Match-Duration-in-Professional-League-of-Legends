@@ -2,3 +2,5 @@ remote_theme: pages-themes/cayman@v0.2.0
 plugins:
 - jekyll-remote-theme # add this line to the plugins list if you already have one
 gem "github-pages", group: :jekyll_plugins
+title: [Early Game Advantage and Match Duration in Professional League of Legends]
+description: [This project analyzes professional League of Legends match data to understand how early-game statistics relate to match outcomes and duration.]
