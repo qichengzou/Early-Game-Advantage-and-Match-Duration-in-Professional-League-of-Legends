@@ -14,7 +14,7 @@ This project is centered around the following question:
 This question matters because game length reflects the pace and competitiveness of a match. In professional play, some games end quickly after one team builds a decisive early lead, while others remain close and extend much longer. Understanding which early-game signals are associated with shorter or longer matches can help reveal how teams convert advantages into wins and which aspects of the game state are most informative for forecasting match flow.
 
 ## Introduction to the Dataset
-The original dataset contains **148464** rows. Since each gameid includes player rows and two team-summary rows, I focus on player-level rows for exploratory data analysis on different game statistics and the team-level rows for modeling so that each observation represents one team’s game state within a match.
+The original dataset contains **148464** rows of match data collected from professional League of Legends tournaments. Each match contains multiple rows describing individual players and team-level summaries. Since each gameid includes player rows and two team-summary rows, I focus on player-level rows for exploratory data analysis on different game statistics and the team-level rows for modeling so that each observation represents one team’s game state within a match.
 
 The columns most relevant to the analysis include:
 
