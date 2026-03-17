@@ -112,29 +112,28 @@ Below is a representative subset of the cleaned team-level dataframe. While the 
 ## Univariate Analysis
 ### Team Kills Per Minute (KPM)
 We begin by examining the distributions of key variables related to combat performance and map control, which are central to understanding team dynamics.
-<div style="text-align: center;">
+
 <iframe
   src="assets/team-kpm.html"
   width="800"
   height="600"
   frameborder="0"
-  style="display: block; margin: 0 auto;"
 ></iframe>
-</div>
+
 The distribution of team kills per minute (`team_kpm`) is approximately unimodal and slightly right-skewed. Most games cluster around a moderate kill rate, with a smaller number of high-tempo games producing unusually high values.
+
 This suggests that while most matches follow a relatively stable pace, there exists a subset of more aggressive games with significantly higher combat intensity.
 
 ### Vision Score Per Minute (VSPM)
 We also examine the distribution of Vision Score Per Minute (vspm). VSPM measures how much vision a team provides or denies through warding, normalized per minute of gameplay. Higher values indicate stronger map control and information advantage.
-<div style="text-align: center;">
+
 <iframe
   src="assets/vspm.html"
   width="800"
   height="600"
   frameborder="0"
-  style="display: block; margin: 0 auto;"
 ></iframe>
-</div>
+
 The distribution of vspm appears approximately symmetric and close to normal, with most teams falling within a relatively narrow range. This suggests that vision control is more consistent across games compared to combat metrics like KPM.
 
 ## Bivariate Analysis
