@@ -137,4 +137,37 @@ We also examine the distribution of Vision Score Per Minute (vspm). VSPM measure
 The distribution of vspm appears approximately symmetric and close to normal, with most teams falling within a relatively narrow range. This suggests that vision control is more consistent across games compared to combat metrics like KPM.
 
 ## Bivariate Analysis
+
+To better understand the relationships between key variables in the dataset, we examine several bivariate plots focusing on game tempo, early-game advantage, and match outcomes.
+
+### Game Length vs Combat Intensity (CKPM)
+
+<div style="text-align: center;">
+<iframe
+  src="assets/ckpm-gamelength.html"
+  width="800"
+  height="600"
+  frameborder="0"
+  style="display: block; margin: 0 auto;">
+</iframe>
+</div>
+
+This plot shows a negative relationship between combined kills per minute (CKPM) and game length. Games with higher combat intensity tend to end faster, suggesting that aggressive gameplay leads to quicker match resolution.
+
+### Vision Score per Minute by Position
+
+<div style="text-align: center;">
+<iframe
+  src="assets/vspm_by_position.html"
+  width="800"
+  height="600"
+  frameborder="0"
+  style="display: block; margin: 0 auto;">
+</iframe>
+</div>
+
+Support players exhibit significantly higher vision score per minute compared to other roles, reflecting their primary responsibility for map control. Other positions show lower and more similar distributions.
+
+Overall, these relationships suggest that both early-game advantage and combat intensity play important roles in determining match duration and outcomes. Teams that gain early leads or engage in high-tempo gameplay tend to close out games more quickly.
+
 ## Interesting Aggregates
