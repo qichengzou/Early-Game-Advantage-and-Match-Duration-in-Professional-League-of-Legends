@@ -115,8 +115,8 @@ We begin by examining the distributions of key variables related to combat perfo
 <div style="text-align: center;">
 <iframe
   src="assets/team-kpm.html"
-  width="800"
-  height="600"
+  width="400"
+  height="300"
   frameborder="0"
 ></iframe>
 </div>
