@@ -155,7 +155,6 @@ To better understand the relationships between key variables in the dataset, we 
 This plot shows a negative relationship between combined kills per minute (CKPM) and game length. Games with higher combat intensity tend to end faster, suggesting that aggressive gameplay leads to quicker match resolution.
 
 ### Vision Score per Minute by Position
-
 <div style="text-align: center;">
 <iframe
   src="assets/vspm_by_position.html"
@@ -171,3 +170,18 @@ Support players exhibit significantly higher vision score per minute compared to
 Overall, these relationships suggest that both early-game advantage and combat intensity play important roles in determining match duration and outcomes. Teams that gain early leads or engage in high-tempo gameplay tend to close out games more quickly.
 
 ## Interesting Aggregates
+To further explore patterns in the data, we examine several aggregate statistics that summarize how key features relate to game outcomes and duration.
+
+### Vision Control Across Roles
+Using the player-level dataset, we compute average vision score per minute (VSPM) for each position. Support players consistently have the highest VSPM, followed by junglers, while carries (mid, ADC, top) have lower values.
+
+| position   |    False |    True |
+|:-----------|---------:|--------:|
+| bot        | 1.07065  | 1.28285 |
+| jng        | 1.26212  | 1.4344  |
+| mid        | 0.952555 | 1.10592 |
+| sup        | 2.3897   | 2.58774 |
+| top        | 0.910576 | 1.02063 |
+
+This reflects the strategic division of responsibilities, where supports and junglers prioritize vision and map control, while carries focus more on farming and damage output.
+---
