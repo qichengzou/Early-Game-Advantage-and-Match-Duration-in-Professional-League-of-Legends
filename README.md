@@ -184,4 +184,7 @@ Using the player-level dataset, we compute average vision score per minute (VSPM
 | top        | 0.910576 | 1.02063 |
 
 This reflects the strategic division of responsibilities, where supports and junglers prioritize vision and map control, while carries focus more on farming and damage output.
+
 ---
+
+
