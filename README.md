@@ -87,6 +87,7 @@ team_df is used for predictive modeling, where each row corresponds to one teamâ
 > In addition, rows with missing values that are **missing at random (MAR)** conditional on league were removed. A substantial portion of missing data is concentrated within specific leagues (e.g., LDL), making standard imputation methods (such as group-wise mean imputation) inappropriate. Such methods would introduce bias and artificially reduce variance. A more detailed justification is provided in the *Assessment of Missingness* section.
 
 Below is the cleaned teams dataframe, with additional player rows dropped:
+
 | gameid                | league   | teamid                                  |   gamelength | result   |   kills |   deaths |   assists |   teamkills |   teamdeaths |   team kpm |   ckpm |   visionscore |   vspm |   totalgold |   earnedgold |   earned gpm |   earnedgoldshare |   goldspent |   total cs |   minionkills |   monsterkills |   cspm |   goldat10 |   goldat15 |   xpat10 |   xpat15 |   csat10 |   csat15 |   golddiffat10 |   golddiffat15 |   xpdiffat10 |   xpdiffat15 |   csdiffat10 |   csdiffat15 |
 |:----------------------|:---------|:----------------------------------------|-------------:|:---------|--------:|---------:|----------:|------------:|-------------:|-----------:|-------:|--------------:|-------:|------------:|-------------:|-------------:|------------------:|------------:|-----------:|--------------:|---------------:|-------:|-----------:|-----------:|---------:|---------:|---------:|---------:|---------------:|---------------:|-------------:|-------------:|-------------:|-------------:|
 | ESPORTSTMNT03/1632489 | KeSPA    | oe:team:ef69efa6acebe94107f0cf1ba716806 |         1782 | True     |       7 |        1 |         3 |          23 |            4 |     0.7744 | 0.9091 |            25 | 0.8418 |       12065 |         8154 |      274.546 |          0.196019 |       10875 |        209 |           193 |             16 | 7.037  |       3421 |       5407 |     5043 |     7536 |       73 |      114 |            436 |            748 |          550 |          -56 |            1 |           -4 |
@@ -105,7 +106,6 @@ We begin by examining the distributions of key variables related to combat perfo
   frameborder="0"
 ></iframe>
 The distribution of team kills per minute (`team_kpm`) is approximately unimodal and slightly right-skewed. Most games cluster around a moderate kill rate, with a smaller number of high-tempo games producing unusually high values.
-
 This suggests that while most matches follow a relatively stable pace, there exists a subset of more aggressive games with significantly higher combat intensity.
 ### Vision Score Per Minute (VSPM)
 We also examine the distribution of Vision Score Per Minute (vspm). VSPM measures how much vision a team provides or denies through warding, normalized per minute of gameplay. Higher values indicate stronger map control and information advantage.
