@@ -34,55 +34,68 @@ The columns most relevant to the analysis include:
 | `killsat15`    | Total number of kills achieved by the team at 15 minutes.                               |
 | `assistsat15`  | Total number of assists recorded by the team at 15 minutes.                             |
 | `deathsat15`   | Total number of deaths suffered by the team at 15 minutes.                              |
+
 ---
 # Data Cleaning and Exploratory Data Analysis
 ## Data Cleaning
-The original dataset is structured such that each gameid corresponds to up to 12 rows: one for each of the 10 players (5 per team) and 2 additional rows containing team-level summary statistics. However, these team-level rows only include a limited subset of aggregated features, meaning many detailed statistics (such as player-level gold, vision, and combat metrics) are not fully represented at the team level.
 
-Because of this, I chose to construct my analysis dataset using player rows, which contain more complete information, and then aggregate them into a consistent team-level dataset. In my exploratory data analysis, I will use both the player dataframe and the team dataframe. This is achieved by 
-1) Filtering to player rows
-   
-   Although team rows already exist, they do not contain all relevant features. Player rows provide a more complete view of the game state, making    them a better foundation for building a full dataset.
-2) Removing incomplete matches
-   
-   Incomplete matches may have missing or unreliable early-game statistics, which would negatively affect both hypothesis testing and modeling.
-3) Removing redundant opponent columns.
+The original dataset is structured such that each `gameid` corresponds to up to 12 rows: one for each of the 10 players (5 per team) and 2 additional rows containing team-level summary statistics. However, these team-level rows only include a limited subset of aggregated features, meaning many detailed statistics (such as player-level gold, vision, and combat metrics) are not fully represented.
 
-   The dataset includes many columns prefixed with opp_, which duplicate information about the opposing team. Since these columns do not add new independent information and may introduce redundancy, I removed them.
-4) Converting the columns which should be of type Boolean
+Because of this, I construct the analysis dataset using **player-level rows**, which contain more complete information, and then aggregate them into a consistent team-level dataset. Throughout the exploratory data analysis, both the player dataframe (`players`) and the aggregated team dataframe (`team_df`) are used.
 
-   Certain columns were converted to more appropriate types. For example, the result column was converted from numeric values to Boolean (`True` for win, `False` for loss) to improve interpretability and consistency.
-5) Selecting relevant columns
+The data cleaning process consists of the following steps:
 
-I selected a subset of columns that capture:
+### 1. Filtering to Player Rows
 
-- early-game economy (gold, XP, CS)
-- combat statistics (kills, deaths, assists)
-- tempo and vision (ckpm, vspm)
-- player and team identifiers
+Although team rows already exist, they do not contain all relevant features. Player rows provide a more complete view of the game state and therefore serve as a better foundation for building a full dataset.
 
-This ensures the dataset focuses on features relevant to both hypothesis testing and prediction.
-6) Constructing a team-level dataset from player rows
+### 2. Removing Incomplete Matches
 
-Although my final analysis is conducted at the team level, I do not use the original team rows because they are incomplete. Instead, I construct a team-level dataset from player rows.
+Incomplete matches may contain missing or unreliable early-game statistics. These were removed to avoid introducing bias into hypothesis testing and predictive modeling.
 
-Within each match, all players on the same team share identical team-level statistics (e.g. gamelength). Therefore, I remove duplicate rows within each (gameid, teamid) pair
+### 3. Removing Redundant Opponent Columns
 
-This results in one row per team per match, while retaining the full set of features available in the player data.
+The dataset includes many columns prefixed with `opp_`, which duplicate information about the opposing team. Since these columns do not provide new independent information and may introduce redundancy, they were removed.
 
-These cleaning steps ensure that:
+### 4. Converting Columns to Appropriate Data Types
 
-- The dataset retains complete and detailed features by starting from player-level data.
+Certain columns were converted to more appropriate types. For example, the `result` column was converted from numeric values to Boolean (`True` for win, `False` for loss) to improve interpretability and consistency.
 
-- Each row in the modeling dataset (team_df) represents a single team in a match, avoiding duplicated information.
+### 5. Selecting Relevant Columns
 
-- Redundant and incomplete data are removed, improving model reliability and interpretability.
+A subset of columns was selected to focus the analysis on key aspects of gameplay:
+
+* **Early-game economy**: `goldat10`, `xpat10`, `csat10`
+* **Combat statistics**: `kills`, `deaths`, `assists`
+* **Tempo and vision**: `ckpm`, `vspm`
+* **Identifiers**: player and team identifiers
+
+This ensures the dataset is aligned with both hypothesis testing and predictive modeling goals.
+
+### 6. Constructing a Team-Level Dataset
+
+Although the final analysis is conducted at the team level, the original team rows are not used due to missing features. Instead, a team-level dataset is constructed from player rows.
+
+Within each match, all players on the same team share identical team-level statistics (e.g., `gamelength`). Therefore, duplicate rows within each (`gameid`, `teamid`) pair are removed.
+
+This results in **one row per team per match**, while retaining the full set of features derived from player-level data.
+
+---
+
+### Summary of Cleaning Decisions
+
+These steps ensure that:
+
+* The dataset retains **complete and detailed features** by starting from player-level data
+* Each row in `team_df` represents **one team per match**, avoiding duplication
+* Redundant and incomplete data are removed, improving **model reliability and interpretability**
 
 As a result:
 
-players is used for role-based analysis (e.g., testing whether supports have higher vision activity).
+* `players` is used for **role-based analysis** (e.g., comparing vision activity across positions)
+* `team_df` is used for **predictive modeling**, where each row corresponds to a team’s game state
 
-team_df is used for predictive modeling, where each row corresponds to one team’s game state.
+---
 
 > In addition, rows with missing values that are **missing at random (MAR)** conditional on league were removed. A substantial portion of missing data is concentrated within specific leagues (e.g., LDL), making standard imputation methods (such as group-wise mean imputation) inappropriate. Such methods would introduce bias and artificially reduce variance. A more detailed justification is provided in the *Assessment of Missingness* section.
 
@@ -99,12 +112,29 @@ Below is a representative subset of the cleaned team-level dataframe. While the 
 ## Univariate Analysis
 ### Team Kills Per Minute (KPM)
 We begin by examining the distributions of key variables related to combat performance and map control, which are central to understanding team dynamics.
-<iframe src="assets/team-kpm.html" width="800" height="600" frameborder="0"></iframe>
+<div style="text-align: center;">
+<iframe
+  src="assets/team-kpm.html"
+  width="800"
+  height="600"
+  frameborder="0"
+  style="display: block; margin: 0 auto;"
+></iframe>
+</div>
 The distribution of team kills per minute (`team_kpm`) is approximately unimodal and slightly right-skewed. Most games cluster around a moderate kill rate, with a smaller number of high-tempo games producing unusually high values.
 This suggests that while most matches follow a relatively stable pace, there exists a subset of more aggressive games with significantly higher combat intensity.
+
 ### Vision Score Per Minute (VSPM)
 We also examine the distribution of Vision Score Per Minute (vspm). VSPM measures how much vision a team provides or denies through warding, normalized per minute of gameplay. Higher values indicate stronger map control and information advantage.
-<iframe src="assets/vspm.html" width="800" height="600" frameborder="0"></iframe>
+<div style="text-align: center;">
+<iframe
+  src="assets/vspm.html"
+  width="800"
+  height="600"
+  frameborder="0"
+  style="display: block; margin: 0 auto;"
+></iframe>
+</div>
 The distribution of vspm appears approximately symmetric and close to normal, with most teams falling within a relatively narrow range. This suggests that vision control is more consistent across games compared to combat metrics like KPM.
 
 ## Bivariate Analysis
