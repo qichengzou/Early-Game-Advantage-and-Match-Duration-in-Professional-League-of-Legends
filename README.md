@@ -86,35 +86,25 @@ team_df is used for predictive modeling, where each row corresponds to one teamâ
 
 > In addition, rows with missing values that are **missing at random (MAR)** conditional on league were removed. A substantial portion of missing data is concentrated within specific leagues (e.g., LDL), making standard imputation methods (such as group-wise mean imputation) inappropriate. Such methods would introduce bias and artificially reduce variance. A more detailed justification is provided in the *Assessment of Missingness* section.
 
-Below is the cleaned teams dataframe, with additional player rows dropped:
+Below is a representative subset of the cleaned team-level dataframe. While the full dataset contains additional features, the columns shown here capture key aspects of early-game performance and overall team combat dynamics:
 
-| gameid                | league   | teamid                                  |   gamelength | result   |   kills |   deaths |   assists |   teamkills |   teamdeaths |   team kpm |   ckpm |   visionscore |   vspm |   totalgold |   earnedgold |   earned gpm |   earnedgoldshare |   goldspent |   total cs |   minionkills |   monsterkills |   cspm |   goldat10 |   goldat15 |   xpat10 |   xpat15 |   csat10 |   csat15 |   golddiffat10 |   golddiffat15 |   xpdiffat10 |   xpdiffat15 |   csdiffat10 |   csdiffat15 |
-|:----------------------|:---------|:----------------------------------------|-------------:|:---------|--------:|---------:|----------:|------------:|-------------:|-----------:|-------:|--------------:|-------:|------------:|-------------:|-------------:|------------------:|------------:|-----------:|--------------:|---------------:|-------:|-----------:|-----------:|---------:|---------:|---------:|---------:|---------------:|---------------:|-------------:|-------------:|-------------:|-------------:|
-| ESPORTSTMNT03/1632489 | KeSPA    | oe:team:ef69efa6acebe94107f0cf1ba716806 |         1782 | True     |       7 |        1 |         3 |          23 |            4 |     0.7744 | 0.9091 |            25 | 0.8418 |       12065 |         8154 |      274.546 |          0.196019 |       10875 |        209 |           193 |             16 | 7.037  |       3421 |       5407 |     5043 |     7536 |       73 |      114 |            436 |            748 |          550 |          -56 |            1 |           -4 |
-| ESPORTSTMNT03/1632489 | KeSPA    | oe:team:5cd2cd09ec94296f605dd13a2924d6c |         1782 | False    |       0 |        5 |         2 |           4 |           24 |     0.1347 | 0.9091 |            20 | 0.6734 |        8863 |         4952 |      166.734 |          0.197362 |        8525 |        215 |           215 |              0 | 7.2391 |       2985 |       4659 |     4493 |     7592 |       72 |      118 |           -436 |           -748 |         -550 |           56 |           -1 |            4 |
-| ESPORTSTMNT03/1632500 | KeSPA    | oe:team:5cd2cd09ec94296f605dd13a2924d6c |         1753 | False    |       0 |        3 |         6 |           7 |           18 |     0.2396 | 0.8557 |            26 | 0.8899 |        9201 |         5349 |      183.08  |          0.191556 |        8650 |        201 |           201 |              0 | 6.8796 |       3183 |       4905 |     4995 |     7319 |       82 |      119 |            335 |            169 |          495 |           80 |           13 |            0 |
-| ESPORTSTMNT03/1632500 | KeSPA    | oe:team:ef69efa6acebe94107f0cf1ba716806 |         1753 | True     |       1 |        2 |         8 |          18 |            7 |     0.6161 | 0.8557 |            32 | 1.0953 |        9579 |         5727 |      196.018 |          0.158084 |        9125 |        197 |           193 |              4 | 6.7427 |       2848 |       4736 |     4500 |     7239 |       69 |      119 |           -335 |           -169 |         -495 |          -80 |          -13 |            0 |
-| ESPORTSTMNT03/1632502 | KeSPA    | oe:team:5cd2cd09ec94296f605dd13a2924d6c |         1777 | False    |       3 |        3 |         3 |          10 |           20 |     0.3376 | 1.0129 |            20 | 0.6753 |        8821 |         4920 |      166.123 |          0.188789 |        8725 |        153 |           148 |              5 | 5.166  |       3110 |       4898 |     4157 |     6894 |       61 |      112 |            670 |            683 |         1069 |          940 |           13 |           11 |
+|   gamelength | result   |   goldat10 |   xpat10 |   csat10 |   teamkills |   teamdeaths |   team kpm |   ckpm |
+|-------------:|:---------|-----------:|---------:|---------:|------------:|-------------:|-----------:|-------:|
+|         1782 | True     |       3421 |     5043 |       73 |          23 |            4 |     0.7744 | 0.9091 |
+|         1782 | False    |       2985 |     4493 |       72 |           4 |           24 |     0.1347 | 0.9091 |
+|         1753 | False    |       3183 |     4995 |       82 |           7 |           18 |     0.2396 | 0.8557 |
+|         1753 | True     |       2848 |     4500 |       69 |          18 |            7 |     0.6161 | 0.8557 |
+|         1777 | False    |       3110 |     4157 |       61 |          10 |           20 |     0.3376 | 1.0129 |
 
 ## Univariate Analysis
 ### Team Kills Per Minute (KPM)
 We begin by examining the distributions of key variables related to combat performance and map control, which are central to understanding team dynamics.
-<iframe
-  src="assets/team-kpm.html"
-  width="800"
-  height="600"
-  frameborder="0"
-></iframe>
+<iframe src="assets/team-kpm.html" width="800" height="600" frameborder="0"></iframe>
 The distribution of team kills per minute (`team_kpm`) is approximately unimodal and slightly right-skewed. Most games cluster around a moderate kill rate, with a smaller number of high-tempo games producing unusually high values.
 This suggests that while most matches follow a relatively stable pace, there exists a subset of more aggressive games with significantly higher combat intensity.
 ### Vision Score Per Minute (VSPM)
 We also examine the distribution of Vision Score Per Minute (vspm). VSPM measures how much vision a team provides or denies through warding, normalized per minute of gameplay. Higher values indicate stronger map control and information advantage.
-<iframe
-  src="assets/vspm.html"
-  width="800"
-  height="600"
-  frameborder="0"
-></iframe>
+<iframe src="assets/vspm.html" width="800" height="600" frameborder="0"></iframe>
 The distribution of vspm appears approximately symmetric and close to normal, with most teams falling within a relatively narrow range. This suggests that vision control is more consistent across games compared to combat metrics like KPM.
 
 ## Bivariate Analysis
