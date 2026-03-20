@@ -458,7 +458,70 @@ The final model achieves a substantial reduction in RMSE (approximately 50 secon
 Additionally, the training and test RMSE values are similar, suggesting that the model generalizes well and does not significantly overfit the training data.
 
 ---
+## Fairness Analysis
 
+### Group Definition
+
+To evaluate fairness, I compare model performance between:
+
+- **Group X (Ahead teams):** teams with `golddiffat15 > 0`  
+- **Group Y (Behind teams):** teams with `golddiffat15 ≤ 0`  
+
+This grouping is meaningful because it reflects early-game advantage. Importantly, the final model uses **absolute-value features** (e.g., `abs_golddiffat15`), which remove information about which team is ahead. This raises a natural fairness question:
+
+> Does ignoring direction cause the model to perform worse for teams that are behind?
+
+### Evaluation Metric
+
+Since this is a regression task, I use **Root Mean Squared Error (RMSE)** to measure model performance. RMSE captures the magnitude of prediction errors in seconds and allows for direct comparison between groups.
+
+### Hypotheses
+
+- **Null Hypothesis:**  
+  The model is fair. RMSE is the same for ahead and behind teams, and any observed difference is due to random chance.
+
+- **Alternative Hypothesis:**  
+  The model is unfair. RMSE is higher for **behind teams** than for ahead teams.
+
+- **Significance Level:** 5%
+
+### Test Statistic
+
+The test statistic is the **difference in RMSE** between the two groups:
+
+$\text{RMSE}_{\text{behind}} - \text{RMSE}_{\text{ahead}}$
+
+A positive value indicates worse performance on behind teams.
+
+### Results
+
+- Observed test statistic: -2.728
+- p-value: **0.349**
+
+Below is a figure of distribution of simulated test statistics under the null hypothesis with observed statistic.
+
+<div style="text-align: center;">
+<iframe
+  src="assets/fairness_permutation.html"
+  width="800"
+  height="600"
+  frameborder="0"
+  style="display: block; margin: 0 auto;">
+</iframe>
+</div>
+
+### Conclusion
+
+Since the p-value is greater than 0.05, I fail to reject the null hypothesis.
+
+This suggests that there is **no statistically significant evidence** that the model performs worse for teams that are behind at 15 minutes compared to teams that are ahead.
+
+
+### Interpretation
+
+This result is particularly important given the model design. Although the model removes directional information by using absolute-value features, it does **not introduce detectable bias** between ahead and behind teams.
+
+This indicates that the **magnitude of early-game advantage** is sufficient for predicting game duration, and that ignoring direction does not harm model fairness.
 
 
 
