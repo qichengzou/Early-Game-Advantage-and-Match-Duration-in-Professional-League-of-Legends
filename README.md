@@ -83,17 +83,17 @@ As a result:
 * `players` is used for **role-based analysis** (e.g., comparing vision activity across positions)
 * `team_df` is used for **predictive modeling**, where each row corresponds to a team’s game state
 
-> In addition, rows with missing values that are **missing at random (MAR)** conditional on league were removed. A substantial portion of missing data is concentrated within specific leagues (e.g., LDL), making standard imputation methods (such as group-wise mean imputation) inappropriate. Such methods would introduce bias and artificially reduce variance. A more detailed justification is provided in the *Assessment of Missingness* section.
+> In addition, rows with missing values that are **missing at random (MAR)** conditional on league were removed. A substantial portion of missing data is concentrated within specific leagues (e.g.LPL, LDL), and a large portion of data within these leagues is missing, making standard imputation methods (such as group-wise mean imputation) inappropriate. Such methods would introduce bias and artificially reduce variance. A more detailed justification is provided in the *Assessment of Missingness* section.
 
 Below is a representative subset of the cleaned team-level dataframe. While the full dataset contains additional features, the columns shown here capture key aspects of early-game performance and overall team combat dynamics:
 
 |   gamelength | result   |   goldat10 |   xpat10 |   csat10 |   teamkills |   teamdeaths |   team kpm |   ckpm |
 |-------------:|:---------|-----------:|---------:|---------:|------------:|-------------:|-----------:|-------:|
-|         1782 | True     |       3421 |     5043 |       73 |          23 |            4 |     0.7744 | 0.9091 |
-|         1782 | False    |       2985 |     4493 |       72 |           4 |           24 |     0.1347 | 0.9091 |
-|         1753 | False    |       3183 |     4995 |       82 |           7 |           18 |     0.2396 | 0.8557 |
-|         1753 | True     |       2848 |     4500 |       69 |          18 |            7 |     0.6161 | 0.8557 |
-|         1777 | False    |       3110 |     4157 |       61 |          10 |           20 |     0.3376 | 1.0129 |
+|         1782 | True     |      16291 |    20459 |      382 |          23 |            4 |     0.7744 | 0.9091 |
+|         1782 | False    |      14498 |    18094 |      317 |           4 |           24 |     0.1347 | 0.9091 |
+|         1753 | False    |      15623 |    19210 |      340 |           7 |           18 |     0.2396 | 0.8557 |
+|         1753 | True     |      14864 |    19039 |      348 |          18 |            7 |     0.6161 | 0.8557 |
+|         1777 | False    |      15043 |    16987 |      275 |          10 |           20 |     0.3376 | 1.0129 |
 
 ## Univariate Analysis
 ### Team Kills Per Minute (KPM)
@@ -262,11 +262,13 @@ Do support players have higher Vision Score Per Minute (`vspm`) than non-support
 
 ### Hypotheses
 
-- **Null Hypothesis (H₀):**  
+- **Null Hypothesis:**  
   The average `vspm` for support players is equal to the average `vspm` for non-support players.
 
-- **Alternative Hypothesis (H₁):**  
+- **Alternative Hypothesis:**  
   The average `vspm` for support players is **greater than** the average `vspm` for non-support players.
+
+- **Significance Level:** 5%  
 
 This is a **one-sided test**, since we specifically expect supports to provide more vision due to their role responsibilities.
 
@@ -348,7 +350,7 @@ RMSE is appropriate because:
 - It measures prediction error in the same units as the response variable (seconds)
 - It penalizes larger errors more heavily, which is important since large mistakes in predicting game duration are more impactful than small ones
 
-I use **RMSE** instead of **$R^2$** because RMSE measures prediction error in the same units as the response variable (seconds), making it directly interpretable. Since the goal of this model is to accurately predict game duration, understanding the magnitude of prediction errors is more important than measuring relative variance explained.
+I use RMSE instead of $R^2$ because RMSE measures prediction error in the same units as the response variable (seconds), making it directly interpretable. Since the goal of this model is to accurately predict game duration, understanding the magnitude of prediction errors is more important than measuring relative variance explained.
 
 ---
 
