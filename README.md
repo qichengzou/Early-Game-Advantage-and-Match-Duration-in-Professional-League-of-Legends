@@ -354,5 +354,112 @@ RMSE is appropriate because:
 
 I use **RMSE** instead of **$R^2$** because RMSE measures prediction error in the same units as the response variable (seconds), making it directly interpretable. Since the goal of this model is to accurately predict game duration, understanding the magnitude of prediction errors is more important than measuring relative variance explained.
 
+---
+
+## Baseline Model
+
+### Model Description
+
+For the baseline model, I use a **linear regression model** to predict game length (`gamelength`) from a small set of early-game features. The goal of this baseline is to establish a simple and interpretable reference point before building a more complex model.
+
+### Features Used
+
+The baseline model uses the following features:
+
+- **`goldat15` (quantitative):** total team gold at 15 minutes  
+- **`golddiffat15` (quantitative):** gold difference between teams at 15 minutes  
+- **`firstPick` (nominal):** whether the team had first pick in champion selection  
+
+These features were chosen because they capture early-game economy and draft advantage, which are likely to influence how quickly a game ends.
+
+### Feature Transformations and Encoding
+
+To prepare the data for modeling, I apply the following preprocessing steps:
+
+- **Numerical features (`goldat15`, `golddiffat15`):**
+  - Missing values are imputed using the mean
+  - Features are standardized using `StandardScaler` to ensure they are on comparable scales
+
+- **Categorical feature (`firstPick`):**
+  - Encoded using **One-Hot Encoding** since it is a nominal variable with no inherent ordering and drop one column to avoid *multicollinearity*.
+
+Additionally, I use grouped train-test splitting by game ID to prevent data leakage between teams from the same match.
+
+### Model Performance
+
+I evaluate the model using **Root Mean Squared Error (RMSE)**.
+
+- **Training RMSE:** 325.943  
+- **Test RMSE:** 311.449  
+
+The relatively similar training and test RMSE values suggest that the model is not significantly overfitting and is able to generalize reasonably well to unseen data.
+
+### Evaluation and Limitations
+
+While the baseline model provides a reasonable starting point, its performance is limited. An RMSE of approximately 300 seconds (around 5 minutes) indicates that predictions can deviate substantially from actual game lengths.
+
+This is expected, since the model:
+- uses only a small number of features
+- assumes a strictly linear relationship between features and the response
+- does not capture more complex interactions or nonlinear effects present in the data
+
+As a result, this baseline model is **not “good” in terms of predictive accuracy**, but it serves as an important reference point for evaluating improvements in the final model.
+
+---
+
+## Final Model
+
+### Overview
+
+To improve upon the baseline model, I developed a more expressive regression model that incorporates additional features capturing early-game dynamics, nonlinear relationships, and feature scaling.
+
+### Feature Engineering
+
+In addition to the baseline features, I engineered several new features to better reflect the structure of the game:
+
+- **`abs_golddiffat15`, `abs_xpdiffat15`, `abs_csdiffat15` (quantitative):**
+  
+  These features measure the **magnitude of imbalance** between the two teams at 15 minutes. Since each match appears twice in the dataset (once per team), one row has a positive difference and the other a negative difference. Taking the absolute value ensures both rows reflect the same underlying game state (e.g. a 1700 gold lead), preventing the model from treating identical situations differently due to team perspective.
+
+- **`combat_aggression15` (quantitative):**
+  
+  This feature captures **early-game combat intensity**, computed from kills and deaths at 15 minutes. Games with higher combat activity may progress faster due to increased skirmishing and objective pressure, making this a relevant predictor of game duration.
+
+- **Polynomial features on `goldat15`, `xpat15`, `csat15`:**
+  
+  I apply polynomial transformations to these early-game economy variables to capture **nonlinear relationships**. For example, small differences in resources may not significantly affect game length, while large leads may accelerate game-ending conditions.
+
+- **Log transformation of `ckpm` , `gold_advantage_ratio`, and `combat_aggression15`(quantitative):**
+  
+  These features are right-skewed, so I apply a log transformation to stabilize variance and reduce the influence of extreme values, improving model robustness.
+
+- **Scaled linear features (`vspm` and engineered imbalance features):**  
+  These features are standardized to ensure they contribute comparably to the model.
+
+These feature choices are motivated by the data generating process: early-game resource differences, combat intensity, and tempo are key drivers of how quickly a team can close out a game.
+
+### Model and Hyperparameter Tuning
+
+To increase model flexibility, I tune the **degree of polynomial features** applied to `goldat15`, `xpat15`, and `csat15`. I consider degrees from 1 to 5 and use **k fold cross-validation**.
+
+The best-performing hyperparameter was:
+
+- **Polynomial degree = 2**
+
+### Model Performance
+
+I evaluate the final model using RMSE on both training and test data:
+
+- **Final Model Test RMSE:** 261.55  
+- **Final Model Training RMSE:** 264.73  
+
+The final model achieves a substantial reduction in RMSE (approximately 50 seconds), indicating improved predictive accuracy.
+
+Additionally, the training and test RMSE values are similar, suggesting that the model generalizes well and does not significantly overfit the training data.
+
+---
+
+
+
 
 
