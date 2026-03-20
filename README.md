@@ -95,8 +95,6 @@ As a result:
 * `players` is used for **role-based analysis** (e.g., comparing vision activity across positions)
 * `team_df` is used for **predictive modeling**, where each row corresponds to a team’s game state
 
----
-
 > In addition, rows with missing values that are **missing at random (MAR)** conditional on league were removed. A substantial portion of missing data is concentrated within specific leagues (e.g., LDL), making standard imputation methods (such as group-wise mean imputation) inappropriate. Such methods would introduce bias and artificially reduce variance. A more detailed justification is provided in the *Assessment of Missingness* section.
 
 Below is a representative subset of the cleaned team-level dataframe. While the full dataset contains additional features, the columns shown here capture key aspects of early-game performance and overall team combat dynamics:
@@ -115,8 +113,8 @@ We begin by examining the distributions of key variables related to combat perfo
 <div style="text-align: center;">
 <iframe
   src="assets/team-kpm.html"
-  width="400"
-  height="300"
+  width="600"
+  height="500"
   frameborder="0"
 ></iframe>
 </div>
@@ -264,4 +262,67 @@ I use the **absolute difference in proportions** of missing values between Blue 
 
 Since the observed statistic is exactly zero and the p-value is large, I fail to reject the null hypothesis. This indicates that missingness of `visionscore` **does not depend on side**.
 
+---
 
+## Hypothesis Testing
+
+To better understand role-based differences in gameplay, I investigate whether support players contribute more to vision control than other roles.
+
+### Question
+
+Do support players have higher Vision Score Per Minute (`vspm`) than non-support players?
+
+### Hypotheses
+
+- **Null Hypothesis (H₀):**  
+  The average `vspm` for support players is equal to the average `vspm` for non-support players.
+
+- **Alternative Hypothesis (H₁):**  
+  The average `vspm` for support players is **greater than** the average `vspm` for non-support players.
+
+This is a **one-sided test**, since we specifically expect supports to provide more vision due to their role responsibilities.
+
+
+### Test Statistic
+
+I use the **difference in means**:
+
+\[
+\text{Mean VSPM (Support)} - \text{Mean VSPM (Non-Support)}
+\]
+
+This statistic directly measures how much more vision support players contribute on average.
+
+### Methodology
+
+I perform a **permutation test**:
+
+- Shuffle the `is_support` labels
+- Recompute the difference in means
+- Repeat this process to build a null distribution
+
+A permutation test is appropriate because:
+- The distribution of `vspm` is not guaranteed to be normal
+- It makes minimal assumptions about the data
+- It directly tests whether group labels matter
+
+### Results
+
+- Observed difference: **≈ 1.36**
+- p-value: **≈ 0.0**
+
+Since the p-value is far below the significance level of **α = 0.05**, I reject the null hypothesis.
+
+Below is a graph of distribution of simulated test statistics under null assumption:
+
+<iframe src="assets/vspm-permutation.html" width="800" height="600" frameborder="0"></iframe>
+
+The observed statistic lies far in the right tail of the permutation distribution, indicating that such a large difference is extremely unlikely under the null hypothesis.
+
+---
+
+### Conclusion
+
+There is strong statistical evidence that support players have higher `vspm` than non-support players.
+
+This aligns with domain knowledge: support players are responsible for warding and vision control, so their higher vision scores are expected. The result confirms that the dataset reflects meaningful role-based differences in gameplay behavior.
