@@ -305,7 +305,7 @@ Since the p-value is far below the significance level of **α = 0.05**, I reject
 
 Below is a graph of distribution of simulated test statistics under null assumption:
 
-<iframe src="assets/vspm-permutation.html" width="800" height="600" frameborder="0"></iframe>
+<iframe src="assets/vspm_permutation" width="800" height="600" frameborder="0"></iframe>
 
 The observed statistic lies far in the right tail of the permutation distribution, indicating that such a large difference is extremely unlikely under the null hypothesis.
 
