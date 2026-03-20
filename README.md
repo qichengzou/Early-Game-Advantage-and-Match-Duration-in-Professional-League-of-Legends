@@ -442,7 +442,7 @@ To increase model flexibility, I tune the **degree of polynomial features** appl
 
 The best-performing hyperparameter was:
 
-- **Polynomial degree = 2**
+- **Polynomial degree = 3**
 
 ### Model Performance
 
