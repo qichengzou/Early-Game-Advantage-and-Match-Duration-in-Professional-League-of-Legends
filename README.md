@@ -496,7 +496,7 @@ A positive value indicates worse performance on behind teams.
 ### Results
 
 - Observed test statistic: -2.728
-- p-value: **0.349**
+- p-value: **0.656**
 
 Below is a figure of distribution of simulated test statistics under the null hypothesis with observed statistic.
 
