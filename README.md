@@ -39,9 +39,12 @@ The columns most relevant to the analysis include:
 # Data Cleaning and Exploratory Data Analysis
 ## Data Cleaning
 
-The original dataset is structured such that each `gameid` corresponds to up to 12 rows: one for each of the 10 players (5 per team) and 2 additional rows containing team-level summary statistics. However, these team-level rows only include a limited subset of aggregated features, meaning many detailed statistics (such as player-level gold, vision, and combat metrics) are not fully represented.
+The original dataset is structured such that each `gameid` corresponds to up to 12 rows: one for each of the 10 players (5 per team) and 2 additional rows containing team-level summary statistics. However, these team-level rows contain only a limited subset of aggregated features, meaning many detailed statistics (such as gold, vision, and combat metrics) are not fully represented.
 
-Because of this, I construct the analysis dataset using **player-level rows**, which contain more complete information, and then aggregate them into a consistent team-level dataset. Throughout the exploratory data analysis, both the player dataframe (`players`) and the aggregated team dataframe (`team_df`) are used.
+To retain the most complete information, I construct the analysis dataset starting from player-level rows, and construct a team-level dataset. Throughout the analysis, I work with two datasets:
+
+- `players`: player-level data for role-based analysis  
+- `team_df`: aggregated team-level data for modeling gamelength 
 
 The data cleaning process consists of the following steps:
 
@@ -63,14 +66,7 @@ Certain columns were converted to more appropriate types. For example, the `resu
 
 ### 5. Selecting Relevant Columns
 
-A subset of columns was selected to focus the analysis on key aspects of gameplay:
-
-* **Early-game economy**: `goldat10`, `xpat10`, `csat10`
-* **Combat statistics**: `kills`, `deaths`, `assists`
-* **Tempo and vision**: `ckpm`, `vspm`
-* **Identifiers**: player and team identifiers
-
-This ensures the dataset is aligned with both hypothesis testing and predictive modeling goals.
+I only include columns that represents in-game combat and farming statistics such as columns involving gold, xp, creep score, kills, deaths, and assists. These features reflects the state of the game instead of the strategics such as champion selection.
 
 ---
 
