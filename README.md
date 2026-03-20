@@ -72,14 +72,6 @@ A subset of columns was selected to focus the analysis on key aspects of gamepla
 
 This ensures the dataset is aligned with both hypothesis testing and predictive modeling goals.
 
-### 6. Constructing a Team-Level Dataset
-
-Although the final analysis is conducted at the team level, the original team rows are not used due to missing features. Instead, a team-level dataset is constructed from player rows.
-
-Within each match, all players on the same team share identical team-level statistics (e.g., `gamelength`). Therefore, duplicate rows within each (`gameid`, `teamid`) pair are removed.
-
-This results in **one row per team per match**, while retaining the full set of features derived from player-level data.
-
 ---
 
 ### Summary of Cleaning Decisions
@@ -223,7 +215,7 @@ Below is a graph of distribution of missingness across leagues:
 
 #### Results
 
-Here's the distribution of similated TVDs:
+Here's the distribution of simulated TVDs:
 
 <div style="text-align: center;">
 <iframe
@@ -287,9 +279,7 @@ This is a **one-sided test**, since we specifically expect supports to provide m
 
 I use the **difference in means**:
 
-\[
-\text{Mean VSPM (Support)} - \text{Mean VSPM (Non-Support)}
-\]
+$\text{Mean VSPM (Support)} - \text{Mean VSPM (Non-Support)}$
 
 This statistic directly measures how much more vision support players contribute on average.
 
@@ -319,10 +309,50 @@ Below is a graph of distribution of simulated test statistics under null assumpt
 
 The observed statistic lies far in the right tail of the permutation distribution, indicating that such a large difference is extremely unlikely under the null hypothesis.
 
----
-
-### Conclusion
+### Hypothesis Test Conclusion
 
 There is strong statistical evidence that support players have higher `vspm` than non-support players.
 
 This aligns with domain knowledge: support players are responsible for warding and vision control, so their higher vision scores are expected. The result confirms that the dataset reflects meaningful role-based differences in gameplay behavior.
+
+---
+
+## Prediction Problem
+
+The goal of this project is to **predict the final game length (`gamelength`) of a professional League of Legends match using early-game information**. Specifically, I use features available at 15 minutes into the game, such as gold, experience, creep score, and combat statistics, to estimate how long the match will ultimately last.
+
+This is a **regression problem**, since the response variable, `gamelength`, is a continuous numerical value measured in seconds.
+
+### Response Variable
+
+The response variable is:
+
+- **`gamelength`**: the total duration of a match
+
+I chose this variable because game length is a fundamental measure of match dynamics and tempo. Understanding how early-game advantages influence match duration can provide insights into how quickly teams convert leads into victories, which is central to my project’s theme of early-game advantage.
+
+### Features and Time-of-Prediction Justification
+
+At the **time of prediction**, I assume that only **early-game statistics (up to 15 minutes)** are available. Therefore, I restrict my model to use features such as:
+
+- `goldat15`, `xpat15`, `csat15`
+- `golddiffat15`, `xpdiffat15`, `csdiffat15`
+- early combat statistics (e.g., kills and deaths at 15 minutes)
+- tempo-related features (e.g., `ckpm`, `vspm`)
+
+I explicitly avoid using any features that depend on later stages of the game (such as gold at 20 or 25 minutes), since those would not be available at the time the prediction is made. This ensures that the model reflects a realistic prediction scenario and avoids data leakage.
+
+### Evaluation Metric
+
+I use **Root Mean Squared Error (RMSE)** as the evaluation metric.
+
+RMSE is appropriate because:
+
+- It is designed for regression problems with continuous targets
+- It measures prediction error in the same units as the response variable (seconds)
+- It penalizes larger errors more heavily, which is important since large mistakes in predicting game duration are more impactful than small ones
+
+I use **RMSE** instead of **$R^2$** because RMSE measures prediction error in the same units as the response variable (seconds), making it directly interpretable. Since the goal of this model is to accurately predict game duration, understanding the magnitude of prediction errors is more important than measuring relative variance explained.
+
+
+
