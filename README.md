@@ -448,8 +448,8 @@ The best-performing hyperparameter was:
 
 I evaluate the final model using RMSE on both training and test data:
 
-- **Final Model Test RMSE:** 261.55  
-- **Final Model Training RMSE:** 264.73  
+- **Final Model Test RMSE:** 261.9  
+- **Final Model Training RMSE:** 256.5  
 
 The final model achieves a substantial reduction in RMSE (approximately 50 seconds), indicating improved predictive accuracy.
 
