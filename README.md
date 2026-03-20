@@ -191,5 +191,77 @@ This reflects the strategic division of responsibilities, where supports and jun
 
 ## MNAR Analysis
 
+A column in this dataset that may exhibit **Missing Not At Random (MNAR)** behavior is `playerid`.
+
+The column `playerid` contains missing values, and unlike gameplay statistics, its missingness is likely tied to the identity and prominence of the player itself. In particular, missing `playerid` values may occur more frequently for less-documented players, substitute players, or players from lower-tier leagues where record-keeping is less standardized. This suggests that the probability of `playerid` being missing depends on the underlying (unobserved) identity of the player.
+
 ## Missingness Dependency
+
+To better understand the mechanism behind missing values in the dataset, I focus on the column `visionscore`, which has the highest proportion of missingness (~9.3%). In this section I will test the missingness dependensy of `visionscore` against `league` and  `side`.
+
+### Dependency on `League` (Dependent Case)
+
+I  test whether missingness depends on the categorical variable `league`. Notably, all rows with missing `visionscore` values come from only two leagues: **LPL and LDL**.
+
+Below is a graph of distribution of missingness across leagues:
+
+<div style="text-align: center;">
+<iframe
+  src="assets/missing_by_league.html"
+  width="800"
+  height="600"
+  frameborder="0"
+  style="display: block; margin: 0 auto;">
+</iframe>
+</div>
+
+#### Hypotheses
+
+- **Null Hypothesis (H₀):** The missingness of `visionscore` does not depend on league.
+- **Alternative Hypothesis (H₁):** The missingness of `visionscore` does depend on league.
+- **Test Statistic:** I use **Total Variation Distance (TVD)** to measure the difference in the distribution of missing vs. non-missing values between:
+  - LPL/LDL leagues
+  - All other leagues
+
+#### Results
+
+Here's the distribution of similated TVDs:
+
+<div style="text-align: center;">
+<iframe
+  src="assets/tvds_dist.html"
+  width="800"
+  height="600"
+  frameborder="0"
+  style="display: block; margin: 0 auto;">
+</iframe>
+</div>
+
+- Observed TVD: **0.96**
+- p-value: **≈ 0.0**
+
+Since the p-value is extremely small, I reject the null hypothesis. This provides strong evidence that the missingness of `visionscore` **depends on league**.
+
+This suggests that missingness is driven by **league-specific data collection practices**, rather than random variation.
+
+### Dependency on Side (Non-Dependent Case)
+
+Next, I test whether missingness depends on the variable `side` (Blue vs. Red team).
+
+#### Hypotheses
+
+- **Null Hypothesis (H₀):** The missingness of `visionscore` does not depend on side.
+- **Alternative Hypothesis (H₁):** The missingness of `visionscore` does depend on side.
+
+#### Test Statistic
+
+I use the **absolute difference in proportions** of missing values between Blue and Red sides.
+
+#### Results
+
+- Observed statistic: **0.0**
+- p-value: **1.0**
+
+Since the observed statistic is exactly zero and the p-value is large, I fail to reject the null hypothesis. This indicates that missingness of `visionscore` **does not depend on side**.
+
 
