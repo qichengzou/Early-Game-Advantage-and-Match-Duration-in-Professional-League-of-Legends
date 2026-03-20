@@ -106,7 +106,7 @@ We begin by examining the distributions of key variables related to combat perfo
 <iframe
   src="assets/team-kpm.html"
   width="600"
-  height="500"
+  height="450"
   frameborder="0"
 ></iframe>
 </div>
@@ -119,8 +119,8 @@ We also examine the distribution of Vision Score Per Minute (vspm). VSPM measure
 <div style="text-align: center;">
 <iframe
   src="assets/vspm.html"
-  width="800"
-  height="600"
+  width="600"
+  height="450"
   frameborder="0"
 ></iframe>
 </div>
@@ -135,8 +135,8 @@ To better understand the relationships between key variables in the dataset, we 
 <div style="text-align: center;">
 <iframe
   src="assets/ckpm-gamelength.html"
-  width="800"
-  height="600"
+  width="600"
+  height="450"
   frameborder="0"
   style="display: block; margin: 0 auto;">
 </iframe>
@@ -198,8 +198,8 @@ Below is a graph of distribution of missingness across leagues:
 <div style="text-align: center;">
 <iframe
   src="assets/missing_by_league.html"
-  width="800"
-  height="600"
+  width="700"
+  height="450"
   frameborder="0"
   style="display: block; margin: 0 auto;">
 </iframe>
@@ -220,8 +220,8 @@ Here's the distribution of simulated TVDs:
 <div style="text-align: center;">
 <iframe
   src="assets/tvds_dist.html"
-  width="800"
-  height="600"
+  width="700"
+  height="450"
   frameborder="0"
   style="display: block; margin: 0 auto;">
 </iframe>
